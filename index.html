@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urna Eletrônica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .urna-container {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            width: 800px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tela {
+            background-color: #e0e0e0;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            height: 300px;
+            position: relative;
+        }
+        
+        .candidato-info {
+            display: none;
+        }
+        
+        .candidato-info:target {
+            display: block;
+        }
+        
+        .nome-candidato {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .partido {
+            font-size: 18px;
+            color: #555;
+        }
+        
+        .numero-digitado {
+            font-size: 48px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .instrucoes {
+            font-size: 16px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .teclado {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .tecla {
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .tecla:hover {
+            background-color: #777;
+        }
+        
+        .tecla-branco {
+            background-color: white;
+            color: black;
+        }
+        
+        .tecla-corrige {
+            background-color: #f44336;
+        }
+        
+        .tecla-confirma {
+            background-color: #4CAF50;
+            grid-column: span 2;
+        }
+        
+        .hierarquia {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .hierarquia a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .hierarquia a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="urna-container">
+        <div class="tela">
+            <!-- Hierarquia de navegação -->
+            <div class="hierarquia">
+                <a href="#inicio">Início</a> > 
+                <a href="#presidente">Presidente</a> > 
+                <a href="#governador">Governador</a> > 
+                <a href="#senador">Senador</a> > 
+                <a href="#deputado-federal">Deputado Federal</a> > 
+                <a href="#deputado-estadual">Deputado Estadual</a>
+            </div>
+            
+            <!-- Conteúdo baseado na hierarquia -->
+            <div id="inicio" class="candidato-info">
+                <h2>Bem-vindo à Urna Eletrônica</h2>
+                <p>Selecione o cargo acima para começar a votação.</p>
+            </div>
+            
+            <div id="presidente" class="candidato-info">
+                <div class="numero-digitado">12</div>
+                <div class="nome-candidato">João da Silva</div>
+                <div class="partido">PARTIDO DEMOCRÁTICO (PD)</div>
+                <div class="instrucoes">
+                    Digite o número do candidato e pressione CONFIRMA
+                </div>
+            </div>
+            
+            <div id="governador" class="candidato-info">
+                <div class="numero-digitado">45</div>
+                <div class="nome-candidato">Maria Oliveira</div>
+                <div class="partido">PARTIDO SOCIAL (PS)</div>
+                <div class="instrucoes">
+                    Digite o número do candidato e pressione CONFIRMA
+                </div>
+            </div>
+            
+            <div id="senador" class="candidato-info">
+                <div class="numero-digitado">123</div>
+                <div class="nome-candidato">Carlos Pereira</div>
+                <div class="partido">PARTIDO TRABALHISTA (PT)</div>
+                <div class="instrucoes">
+                    Digite o número do candidato e pressione CONFIRMA
+                </div>
+            </div>
+            
+            <div id="deputado-federal" class="candidato-info">
+                <div class="numero-digitado">4567</div>
+                <div class="nome-candidato">Ana Costa</div>
+                <div class="partido">PARTIDO LIBERAL (PL)</div>
+                <div class="instrucoes">
+                    Digite o número do candidato e pressione CONFIRMA
+                </div>
+            </div>
+            
+            <div id="deputado-estadual" class="candidato-info">
+                <div class="numero-digitado">98765</div>
+                <div class="nome-candidato">Pedro Santos</div>
+                <div class="partido">PARTIDO VERDE (PV)</div>
+                <div class="instrucoes">
+                    Digite o número do candidato e pressione CONFIRMA
+                </div>
+            </div>
+        </div>
+        
+        <div class="teclado">
+            <a href="#presidente" class="tecla">1</a>
+            <a href="#governador" class="tecla">2</a>
+            <a href="#senador" class="tecla">3</a>
+            <a href="#deputado-federal" class="tecla">4</a>
+            <a href="#deputado-estadual" class="tecla">5</a>
+            <a href="#inicio" class="tecla">6</a>
+            <a href="#inicio" class="tecla">7</a>
+            <a href="#inicio" class="tecla">8</a>
+            <a href="#inicio" class="tecla">9</a>
+            <a href="#inicio" class="tecla tecla-branco">BRANCO</a>
+            <a href="#inicio" class="tecla">0</a>
+            <a href="#inicio" class="tecla tecla-corrige">CORRIGE</a>
+            <a href="#inicio" class="tecla tecla-confirma">CONFIRMA</a>
+        </div>
+    </div>
+</body>
+</html>
