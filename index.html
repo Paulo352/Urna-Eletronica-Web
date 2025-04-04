@@ -3,200 +3,729 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urna Eletrônica</title>
+    <title>Urna Eletrônica - Eleições 2022</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
         
         .urna-container {
-            background-color: #333;
-            border-radius: 10px;
+            width: 1000px;
+            background-color: #2c3e50;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .tela-container {
+            width: 60%;
+            background-color: #34495e;
             padding: 20px;
-            width: 800px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
         }
         
         .tela {
-            background-color: #e0e0e0;
-            border: 2px solid #000;
+            background-color: #ecf0f1;
+            border: 4px solid #7f8c8d;
             border-radius: 5px;
+            flex-grow: 1;
             padding: 15px;
-            margin-bottom: 20px;
-            height: 300px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
-        .candidato-info {
-            display: none;
-        }
-        
-        .candidato-info:target {
-            display: block;
-        }
-        
-        .nome-candidato {
-            font-size: 24px;
+        .tela-rodape {
+            height: 50px;
+            background-color: #bdc3c7;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            margin-bottom: 10px;
+            color: #2c3e50;
         }
         
-        .partido {
-            font-size: 18px;
-            color: #555;
-        }
-        
-        .numero-digitado {
-            font-size: 48px;
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .instrucoes {
-            font-size: 16px;
-            color: #666;
-            margin-top: 20px;
+        .teclado-container {
+            width: 40%;
+            background-color: #34495e;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         
         .teclado {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 15px;
+            margin-top: 20px;
+            flex-grow: 1;
         }
         
         .tecla {
-            background-color: #555;
-            color: white;
+            background-color: #2c3e50;
             border: none;
-            border-radius: 5px;
-            padding: 15px;
-            font-size: 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #1a252f;
+            position: relative;
+            overflow: hidden;
         }
         
-        .tecla:hover {
-            background-color: #777;
+        .tecla:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #1a252f;
+        }
+        
+        .tecla::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .tecla:hover::after {
+            opacity: 1;
         }
         
         .tecla-branco {
             background-color: white;
-            color: black;
+            color: #2c3e50;
         }
         
         .tecla-corrige {
-            background-color: #f44336;
+            background-color: #e74c3c;
         }
         
         .tecla-confirma {
-            background-color: #4CAF50;
+            background-color: #27ae60;
             grid-column: span 2;
         }
         
-        .hierarquia {
-            margin-top: 20px;
-            color: white;
+        .etapa {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .etapa.ativo {
+            display: flex;
+        }
+        
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .titulo-urna {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .estado {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+        
+        .numero-digitado {
+            font-size: 60px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 10px;
+            color: #2c3e50;
+        }
+        
+        .candidato-info {
+            display: flex;
+            margin: 10px 0;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .foto-candidato {
+            width: 100px;
+            height: 120px;
+            background-color: #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .dados-candidato {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: white;
+        }
+        
+        .nome-candidato {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .partido {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .vice {
+            font-size: 14px;
+            color: #95a5a6;
+        }
+        
+        .instrucoes {
+            margin-top: auto;
+            padding: 10px;
+            background-color: #dfe6e9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .botoes-acao {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .tela-inicial {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .tela-inicial h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .input-titulo {
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+        }
+        
+        .tela-confirmacao {
             text-align: center;
         }
         
-        .hierarquia a {
-            color: #4CAF50;
-            text-decoration: none;
-            margin: 0 10px;
+        .tela-confirmacao h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
         }
         
-        .hierarquia a:hover {
-            text-decoration: underline;
+        .tela-final {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .tela-final h2 {
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        
+        .resultados-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 100%;
+            padding: 10px;
+            background-color: #dfe6e9;
+            border-radius: 5px;
+        }
+        
+        .resultado-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: white;
+            border-radius: 3px;
+        }
+        
+        .codigo-admin {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
     <div class="urna-container">
-        <div class="tela">
-            <!-- Hierarquia de navegação -->
-            <div class="hierarquia">
-                <a href="#inicio">Início</a> > 
-                <a href="#presidente">Presidente</a> > 
-                <a href="#governador">Governador</a> > 
-                <a href="#senador">Senador</a> > 
-                <a href="#deputado-federal">Deputado Federal</a> > 
-                <a href="#deputado-estadual">Deputado Estadual</a>
-            </div>
-            
-            <!-- Conteúdo baseado na hierarquia -->
-            <div id="inicio" class="candidato-info">
-                <h2>Bem-vindo à Urna Eletrônica</h2>
-                <p>Selecione o cargo acima para começar a votação.</p>
-            </div>
-            
-            <div id="presidente" class="candidato-info">
-                <div class="numero-digitado">12</div>
-                <div class="nome-candidato">João da Silva</div>
-                <div class="partido">PARTIDO DEMOCRÁTICO (PD)</div>
-                <div class="instrucoes">
-                    Digite o número do candidato e pressione CONFIRMA
+        <div class="tela-container">
+            <div class="tela">
+                <!-- Tela Inicial -->
+                <div id="inicio" class="etapa ativo">
+                    <div class="cabecalho">
+                        <div class="titulo-urna">URNA ELETRÔNICA</div>
+                        <div class="estado">PARANÁ</div>
+                    </div>
+                    <div class="tela-inicial">
+                        <h2>Eleições Gerais 2022</h2>
+                        <input type="text" class="input-titulo" id="titulo-eleitor" placeholder="Número do título">
+                        <button onclick="iniciarVotacao()" class="tecla tecla-confirma" style="width: 200px;">INICIAR</button>
+                        <div class="codigo-admin">Código admin: 00000</div>
+                    </div>
+                </div>
+                
+                <!-- Votação Presidente -->
+                <div id="presidente" class="etapa">
+                    <div class="cabecalho">
+                        <div class="titulo-urna">PRESIDENTE</div>
+                        <div class="estado">BRASIL</div>
+                    </div>
+                    <div class="numero-digitado" id="numero-presidente">__</div>
+                    
+                    <div class="candidato-info" id="info-presidente">
+                        <div class="foto-candidato">FOTO</div>
+                        <div class="dados-candidato">
+                            <div class="nome-candidato">Seu voto para</div>
+                            <div class="partido">Presidente</div>
+                            <div class="vice">Número: __</div>
+                        </div>
+                    </div>
+                    
+                    <div class="instrucoes">
+                        Aperte a tecla:<br>
+                        CONFIRMA para CONFIRMAR este voto<br>
+                        CORRIGE para REINICIAR este voto
+                    </div>
+                </div>
+                
+                <!-- Votação Governador -->
+                <div id="governador" class="etapa">
+                    <div class="cabecalho">
+                        <div class="titulo-urna">GOVERNADOR</div>
+                        <div class="estado">PARANÁ</div>
+                    </div>
+                    <div class="numero-digitado" id="numero-governador">__</div>
+                    
+                    <div class="candidato-info" id="info-governador">
+                        <div class="foto-candidato">FOTO</div>
+                        <div class="dados-candidato">
+                            <div class="nome-candidato">Seu voto para</div>
+                            <div class="partido">Governador</div>
+                            <div class="vice">Número: __</div>
+                        </div>
+                    </div>
+                    
+                    <div class="instrucoes">
+                        Aperte a tecla:<br>
+                        CONFIRMA para CONFIRMAR este voto<br>
+                        CORRIGE para REINICIAR este voto
+                    </div>
+                </div>
+                
+                <!-- Confirmação -->
+                <div id="confirmacao" class="etapa">
+                    <div class="cabecalho">
+                        <div class="titulo-urna">CONFIRME SEU VOTO</div>
+                        <div class="estado">PARANÁ</div>
+                    </div>
+                    
+                    <div class="tela-confirmacao">
+                        <h2>Confirmação do Voto</h2>
+                        <div class="candidato-info" style="margin: 0 auto 20px; max-width: 400px;">
+                            <div class="foto-candidato">FOTO</div>
+                            <div class="dados-candidato" id="confirmacao-dados">
+                                <!-- Preenchido pelo JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="instrucoes">
+                            Verifique se os dados estão corretos
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final -->
+                <div id="fim" class="etapa">
+                    <div class="tela-final">
+                        <h2>VOTO REGISTRADO COM SUCESSO!</h2>
+                        <p style="margin-bottom: 20px;">Obrigado por votar.</p>
+                        <div id="resumo-voto" style="margin-bottom: 30px;">
+                            <!-- Preenchido pelo JavaScript -->
+                        </div>
+                        <button onclick="voltarInicio()" class="tecla tecla-confirma" style="width: 200px;">VOLTAR AO INÍCIO</button>
+                    </div>
+                </div>
+                
+                <!-- Resultados -->
+                <div id="resultados" class="etapa">
+                    <div class="cabecalho">
+                        <div class="titulo-urna">RESULTADOS PARCIAIS</div>
+                        <div class="estado">PARANÁ</div>
+                    </div>
+                    
+                    <div class="resultados-container" id="resultados-container">
+                        <!-- Preenchido pelo JavaScript -->
+                    </div>
+                    
+                    <div class="botoes-acao">
+                        <button onclick="voltarInicio()" class="tecla tecla-confirma">VOLTAR</button>
+                    </div>
                 </div>
             </div>
-            
-            <div id="governador" class="candidato-info">
-                <div class="numero-digitado">45</div>
-                <div class="nome-candidato">Maria Oliveira</div>
-                <div class="partido">PARTIDO SOCIAL (PS)</div>
-                <div class="instrucoes">
-                    Digite o número do candidato e pressione CONFIRMA
-                </div>
-            </div>
-            
-            <div id="senador" class="candidato-info">
-                <div class="numero-digitado">123</div>
-                <div class="nome-candidato">Carlos Pereira</div>
-                <div class="partido">PARTIDO TRABALHISTA (PT)</div>
-                <div class="instrucoes">
-                    Digite o número do candidato e pressione CONFIRMA
-                </div>
-            </div>
-            
-            <div id="deputado-federal" class="candidato-info">
-                <div class="numero-digitado">4567</div>
-                <div class="nome-candidato">Ana Costa</div>
-                <div class="partido">PARTIDO LIBERAL (PL)</div>
-                <div class="instrucoes">
-                    Digite o número do candidato e pressione CONFIRMA
-                </div>
-            </div>
-            
-            <div id="deputado-estadual" class="candidato-info">
-                <div class="numero-digitado">98765</div>
-                <div class="nome-candidato">Pedro Santos</div>
-                <div class="partido">PARTIDO VERDE (PV)</div>
-                <div class="instrucoes">
-                    Digite o número do candidato e pressione CONFIRMA
-                </div>
+            <div class="tela-rodape">
+                JUSTIÇA ELEITORAL
             </div>
         </div>
         
-        <div class="teclado">
-            <a href="#presidente" class="tecla">1</a>
-            <a href="#governador" class="tecla">2</a>
-            <a href="#senador" class="tecla">3</a>
-            <a href="#deputado-federal" class="tecla">4</a>
-            <a href="#deputado-estadual" class="tecla">5</a>
-            <a href="#inicio" class="tecla">6</a>
-            <a href="#inicio" class="tecla">7</a>
-            <a href="#inicio" class="tecla">8</a>
-            <a href="#inicio" class="tecla">9</a>
-            <a href="#inicio" class="tecla tecla-branco">BRANCO</a>
-            <a href="#inicio" class="tecla">0</a>
-            <a href="#inicio" class="tecla tecla-corrige">CORRIGE</a>
-            <a href="#inicio" class="tecla tecla-confirma">CONFIRMA</a>
+        <div class="teclado-container">
+            <div style="text-align: center; color: white; font-weight: bold; margin-bottom: 10px;">
+                TELEFONE DO ELEITOR
+            </div>
+            
+            <div class="teclado">
+                <button onclick="adicionarNumero('1')" class="tecla">1</button>
+                <button onclick="adicionarNumero('2')" class="tecla">2</button>
+                <button onclick="adicionarNumero('3')" class="tecla">3</button>
+                <button onclick="adicionarNumero('4')" class="tecla">4</button>
+                <button onclick="adicionarNumero('5')" class="tecla">5</button>
+                <button onclick="adicionarNumero('6')" class="tecla">6</button>
+                <button onclick="adicionarNumero('7')" class="tecla">7</button>
+                <button onclick="adicionarNumero('8')" class="tecla">8</button>
+                <button onclick="adicionarNumero('9')" class="tecla">9</button>
+                <button onclick="votoBranco()" class="tecla tecla-branco">BRANCO</button>
+                <button onclick="adicionarNumero('0')" class="tecla">0</button>
+                <button onclick="corrige()" class="tecla tecla-corrige">CORRIGE</button>
+                <button onclick="confirmar()" class="tecla tecla-confirma">CONFIRMA</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Variáveis globais
+        let etapaAtual = 'inicio';
+        let numeroDigitado = '';
+        let cargoAtual = '';
+        let votos = {
+            presidente: {},
+            governador: {}
+        };
+        let votoAtual = {
+            presidente: null,
+            governador: null
+        };
+        let codigoAdmin = '54321';
+        let digitacaoCodigo = '';
+        
+        // Candidatos a presidente em 2022
+        const candidatos = {
+            presidente: {
+                '13': { 
+                    nome: 'Lula', 
+                    partido: 'PT', 
+                    vice: 'Geraldo Alckmin', 
+                    numero: '13',
+                    foto: 'https://example.com/lula.jpg' 
+                },
+                '22': { 
+                    nome: 'Bolsonaro', 
+                    partido: 'PL', 
+                    vice: 'Braga Netto', 
+                    numero: '22',
+                    foto: 'https://example.com/bolsonaro.jpg' 
+                },
+                '12': { 
+                    nome: 'Ciro Gomes', 
+                    partido: 'PDT', 
+                    vice: 'Ana Paula Matos', 
+                    numero: '12',
+                    foto: 'https://example.com/ciro.jpg' 
+                },
+                '15': { 
+                    nome: 'Simone Tebet', 
+                    partido: 'MDB', 
+                    vice: 'Mara Gabrilli', 
+                    numero: '15',
+                    foto: 'https://example.com/tebet.jpg' 
+                }
+            },
+            governador: {
+                '13': { 
+                    nome: 'Roberto Requião', 
+                    partido: 'PT', 
+                    vice: 'Gleisi Hoffmann', 
+                    numero: '13',
+                    foto: 'https://example.com/requiao.jpg' 
+                },
+                '45': { 
+                    nome: 'Ratinho Junior', 
+                    partido: 'PSD', 
+                    vice: 'Darci Piana', 
+                    numero: '45',
+                    foto: 'https://example.com/ratinho.jpg' 
+                },
+                '44': { 
+                    nome: 'Cida Borghetti', 
+                    partido: 'PSDB', 
+                    vice: 'Artagão Junior', 
+                    numero: '44',
+                    foto: 'https://example.com/cida.jpg' 
+                }
+            }
+        };
+
+        // Funções de navegação
+        function iniciarVotacao() {
+            const titulo = document.getElementById('titulo-eleitor').value;
+            
+            // Verifica se digitou o código admin
+            if (titulo === codigoAdmin) {
+                verResultados();
+                return;
+            }
+            
+            if (titulo.length < 5) {
+                alert('Digite um número de título válido!');
+                return;
+            }
+            mudarEtapa('presidente');
+        }
+
+        function mudarEtapa(etapa) {
+            etapaAtual = etapa;
+            
+            // Esconde todas as etapas
+            document.querySelectorAll('.etapa').forEach(el => {
+                el.classList.remove('ativo');
+            });
+            
+            // Mostra a etapa atual
+            document.getElementById(etapa).classList.add('ativo');
+            
+            // Configurações específicas para cada etapa
+            if (etapa === 'presidente' || etapa === 'governador') {
+                cargoAtual = etapa;
+                numeroDigitado = '';
+                atualizarDisplay();
+            }
+        }
+
+        // Funções do teclado
+        function adicionarNumero(numero) {
+            if (etapaAtual !== 'presidente' && etapaAtual !== 'governador') return;
+            
+            numeroDigitado += numero;
+            if ((cargoAtual === 'presidente' && numeroDigitado.length > 2) || 
+                (cargoAtual === 'governador' && numeroDigitado.length > 2)) {
+                numeroDigitado = numeroDigitado.slice(0, 2);
+            }
+            atualizarDisplay();
+            
+            // Verifica se o número é válido
+            if ((cargoAtual === 'presidente' && numeroDigitado.length === 2) || 
+                (cargoAtual === 'governador' && numeroDigitado.length === 2)) {
+                verificarCandidato();
+            }
+        }
+
+        function votoBranco() {
+            if (etapaAtual !== 'presidente' && etapaAtual !== 'governador') return;
+            
+            numeroDigitado = 'br';
+            votoAtual[cargoAtual] = { nome: 'Voto em Branco', partido: '', vice: '', numero: 'br' };
+            atualizarDisplay();
+        }
+
+        function corrige() {
+            if (etapaAtual !== 'presidente' && etapaAtual !== 'governador') return;
+            
+            numeroDigitado = '';
+            votoAtual[cargoAtual] = null;
+            atualizarDisplay();
+        }
+
+        function confirmar() {
+            if (etapaAtual === 'presidente') {
+                if (!votoAtual.presidente) {
+                    alert('Selecione um candidato válido!');
+                    return;
+                }
+                mudarEtapa('governador');
+            } else if (etapaAtual === 'governador') {
+                if (!votoAtual.governador) {
+                    alert('Selecione um candidato válido!');
+                    return;
+                }
+                mostrarConfirmacao();
+            } else if (etapaAtual === 'confirmacao') {
+                finalizarVotacao();
+            }
+        }
+
+        // Funções de atualização
+        function atualizarDisplay() {
+            const display = document.getElementById(`numero-${cargoAtual}`);
+            display.innerText = numeroDigitado.padEnd(2, '_');
+            
+            const info = document.getElementById(`info-${cargoAtual}`);
+            if (numeroDigitado.length === 0) {
+                info.querySelector('.nome-candidato').innerText = 'Seu voto para';
+                info.querySelector('.partido').innerText = cargoAtual === 'presidente' ? 'Presidente' : 'Governador';
+                info.querySelector('.vice').innerText = 'Número: __';
+            } else if (votoAtual[cargoAtual]) {
+                const cand = votoAtual[cargoAtual];
+                info.querySelector('.nome-candidato').innerText = cand.nome;
+                info.querySelector('.partido').innerText = cand.partido ? cand.partido : '';
+                info.querySelector('.vice').innerText = cand.vice ? 'Vice: ' + cand.vice : 'Número: ' + cand.numero;
+            } else {
+                info.querySelector('.nome-candidato').innerText = 'Candidato não encontrado';
+                info.querySelector('.partido').innerText = 'Número inválido';
+                info.querySelector('.vice').innerText = 'Número: ' + numeroDigitado;
+            }
+        }
+
+        function verificarCandidato() {
+            if (candidatos[cargoAtual][numeroDigitado]) {
+                votoAtual[cargoAtual] = candidatos[cargoAtual][numeroDigitado];
+            } else {
+                votoAtual[cargoAtual] = null;
+            }
+            atualizarDisplay();
+        }
+
+        // Funções de confirmação
+        function mostrarConfirmacao() {
+            const confirmacao = document.getElementById('confirmacao-dados');
+            confirmacao.innerHTML = '';
+            
+            // Presidente
+            if (votoAtual.presidente) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="nome-candidato">${votoAtual.presidente.nome}</div>
+                    <div class="partido">${votoAtual.presidente.partido} - ${votoAtual.presidente.numero}</div>
+                    <div class="vice">Vice: ${votoAtual.presidente.vice}</div>
+                `;
+                confirmacao.appendChild(div);
+            }
+            
+            // Governador
+            if (votoAtual.governador) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="nome-candidato">${votoAtual.governador.nome}</div>
+                    <div class="partido">${votoAtual.governador.partido} - ${votoAtual.governador.numero}</div>
+                    ${votoAtual.governador.vice ? `<div class="vice">Vice: ${votoAtual.governador.vice}</div>` : ''}
+                `;
+                confirmacao.appendChild(div);
+            }
+            
+            mudarEtapa('confirmacao');
+        }
+
+        function finalizarVotacao() {
+            // Registrar votos
+            if (votoAtual.presidente) {
+                const num = votoAtual.presidente.numero;
+                votos.presidente[num] = (votos.presidente[num] || 0) + 1;
+            }
+            
+            if (votoAtual.governador) {
+                const num = votoAtual.governador.numero;
+                votos.governador[num] = (votos.governador[num] || 0) + 1;
+            }
+            
+            // Mostrar resumo do voto
+            const resumo = document.getElementById('resumo-voto');
+            resumo.innerHTML = '';
+            
+            if (votoAtual.presidente) {
+                resumo.innerHTML += `<p>Presidente: ${votoAtual.presidente.nome} (${votoAtual.presidente.numero})</p>`;
+            }
+            
+            if (votoAtual.governador) {
+                resumo.innerHTML += `<p>Governador: ${votoAtual.governador.nome} (${votoAtual.governador.numero})</p>`;
+            }
+            
+            mudarEtapa('fim');
+        }
+
+        function voltarInicio() {
+            // Limpa o voto atual
+            votoAtual = {
+                presidente: null,
+                governador: null
+            };
+            numeroDigitado = '';
+            
+            // Volta para o início
+            document.getElementById('titulo-eleitor').value = '';
+            mudarEtapa('inicio');
+        }
+
+        // Funções de resultados
+        function verResultados() {
+            const container = document.getElementById('resultados-container');
+            container.innerHTML = '';
+            
+            // Presidente
+            container.innerHTML += '<h3>Presidente</h3>';
+            for (const [num, qtd] of Object.entries(votos.presidente)) {
+                const cand = candidatos.presidente[num] || { nome: 'Branco/Nulo', partido: '' };
+                container.innerHTML += `
+                    <div class="resultado-item">
+                        ${cand.nome} (${num}): ${qtd} voto${qtd !== 1 ? 's' : ''}
+                    </div>
+                `;
+            }
+            
+            // Governador
+            container.innerHTML += '<h3>Governador</h3>';
+            for (const [num, qtd] of Object.entries(votos.governador)) {
+                const cand = candidatos.governador[num] || { nome: 'Branco/Nulo', partido: '' };
+                container.innerHTML += `
+                    <div class="resultado-item">
+                        ${cand.nome} (${num}): ${qtd} voto${qtd !== 1 ? 's' : ''}
+                    </div>
+                `;
+            }
+            
+            mudarEtapa('resultados');
+        }
+    </script>
 </body>
 </html>
